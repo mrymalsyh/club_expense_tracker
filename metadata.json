@@ -1,0 +1,6 @@
+{
+  "name": "Club Expense Tracker",
+  "description": "Sistem Penjejak Bajet & Perbelanjaan Kelab — student club treasury and expense ledger built with Next.js 15, Prisma v6, and PostgreSQL.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

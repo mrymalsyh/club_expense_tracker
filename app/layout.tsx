@@ -1,18 +1,25 @@
 import type { Metadata } from 'next';
-import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
+import { Archivo_Black, Space_Mono, Inter } from 'next/font/google';
 import './globals.css';
 
-const plusJakarta = Plus_Jakarta_Sans({
+const archivoBlack = Archivo_Black({
   subsets: ['latin'],
-  weight: ['400', '500', '600', '700'],
-  variable: '--font-plus-jakarta',
+  weight: '400',
+  variable: '--font-archivo-black',
   display: 'swap',
 });
 
-const jetbrainsMono = JetBrains_Mono({
+const spaceMono = Space_Mono({
   subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-jetbrains-mono',
+  weight: ['400', '700'],
+  variable: '--font-space-mono',
+  display: 'swap',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
+  variable: '--font-inter',
   display: 'swap',
 });
 
@@ -38,10 +45,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html
       lang="ms"
-      className={`${plusJakarta.variable} ${jetbrainsMono.variable}`}
+      className={`${archivoBlack.variable} ${spaceMono.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-screen bg-slate-50 text-slate-900 antialiased" suppressHydrationWarning>
+      <body
+        className="min-h-screen bg-[#FF4D00] text-black antialiased selection:bg-black selection:text-[#FF4D00]"
+        suppressHydrationWarning
+      >
         {children}
       </body>
     </html>

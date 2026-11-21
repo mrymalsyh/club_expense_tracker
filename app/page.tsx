@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
+  ArrowDown,
   ArrowDownRight,
   ArrowUpRight,
   Download,
@@ -250,88 +251,206 @@ export default function ClubExpenseTrackerPage() {
     pushToast('success', `${filteredRecords.length} rekod berjaya dieksport ke CSV.`);
   };
 
+  const scrollToRingkasan = () => {
+    const el = document.getElementById('ringkasan');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900">
-      <header className="sticky top-0 z-30 border-b border-slate-200 bg-white/95 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-8 px-4 py-3.5 sm:px-6 lg:px-8">
+    <div className="min-h-screen overflow-x-clip bg-[#FF4D00] text-black">
+      {/* Floating Navigation */}
+      <header className="fixed inset-x-0 top-4 z-40 px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
           <a
-            href="#ringkasan"
-            className="text-lg font-bold tracking-tight text-slate-900 whitespace-nowrap shrink-0"
+            href="#hero"
+            className="border-2 border-black bg-[#FF4D00] px-3 py-1.5 font-[family-name:var(--font-display)] text-sm tracking-[-0.04em] text-black uppercase whitespace-nowrap shrink-0 transition-transform hover:scale-105"
           >
-            Club Expense Tracker
+            CLUB EXPENSE
           </a>
 
           <nav
             aria-label="Navigasi utama"
-            className="hidden md:flex items-center gap-6 text-sm font-medium text-slate-600"
+            className="hidden md:flex items-center gap-1 rounded-full bg-black p-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.32)]"
           >
             <a
               href="#ringkasan"
-              className="transition-colors hover:text-slate-900 whitespace-nowrap shrink-0"
+              className="rounded-full px-4 py-1.5 font-mono text-[12px] font-bold tracking-[-0.02em] text-white uppercase transition-colors hover:bg-white hover:text-black whitespace-nowrap shrink-0"
             >
-              Ringkasan
+              RINGKASAN
             </a>
             <a
               href="#lejar-transaksi"
-              className="transition-colors hover:text-slate-900 whitespace-nowrap shrink-0"
+              className="rounded-full px-4 py-1.5 font-mono text-[12px] font-bold tracking-[-0.02em] text-white uppercase transition-colors hover:bg-white hover:text-black whitespace-nowrap shrink-0"
             >
-              Lejar Transaksi
+              LEJAR
             </a>
             <a
               href="#pecahan-kategori"
-              className="transition-colors hover:text-slate-900 whitespace-nowrap shrink-0"
+              className="rounded-full px-4 py-1.5 font-mono text-[12px] font-bold tracking-[-0.02em] text-white uppercase transition-colors hover:bg-white hover:text-black whitespace-nowrap shrink-0"
             >
-              Pecahan Kategori
+              KATEGORI
             </a>
+            <button
+              type="button"
+              onClick={handleExportCsv}
+              className="rounded-full px-4 py-1.5 font-mono text-[12px] font-bold tracking-[-0.02em] text-white uppercase transition-colors hover:bg-white hover:text-black whitespace-nowrap shrink-0"
+            >
+              EKSPORT
+            </button>
           </nav>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={fetchTransactions}
+              disabled={isLoading}
+              aria-label="Muat semula transaksi"
+              className="flex h-10 w-10 items-center justify-center rounded-full border-2 border-black bg-white text-black transition-transform hover:scale-110 hover:bg-black hover:text-white disabled:opacity-50"
+            >
+              <RefreshCw className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`} />
+            </button>
             <button
               type="button"
               onClick={handleOpenCreate}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900"
+              className="inline-flex items-center gap-1.5 rounded-full border-2 border-black bg-black px-4 py-2 font-mono text-[12px] font-bold tracking-[-0.02em] text-white uppercase shadow-[0_10px_24px_rgba(0,0,0,0.28)] transition-all hover:scale-110 hover:bg-white hover:text-black whitespace-nowrap shrink-0"
             >
               <Plus className="h-4 w-4" />
-              <span>Tambah Rekod</span>
+              <span>TAMBAH</span>
             </button>
           </div>
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl space-y-8 px-4 py-8 sm:px-6 lg:px-8">
-        <section id="ringkasan" className="space-y-6">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl text-balance">
-                Sistem Penjejak Bajet &amp; Perbelanjaan Kelab
-              </h1>
-              <div className="mt-1.5 flex flex-wrap items-center gap-2 text-sm text-slate-500">
-                <span>Bendahari &amp; Jawatankuasa Program</span>
-                <span aria-hidden="true">·</span>
-                <span>Rekod Aliran Tunai Kelab</span>
-                <span aria-hidden="true">·</span>
-                <span className="font-mono text-xs">Ringgit Malaysia (RM)</span>
-              </div>
+      {/* Typographic Hero Section */}
+      <section
+        id="hero"
+        className="flex min-h-[88vh] flex-col justify-between px-4 pt-28 pb-8 sm:px-6 lg:px-8"
+      >
+        <div className="mx-auto flex w-full max-w-7xl flex-1 items-center justify-center py-8">
+          <h1 className="text-center font-[family-name:var(--font-display)] text-[16vw] leading-[0.85] tracking-[-0.04em] text-black uppercase select-none">
+            BAJET
+            <br />
+            KELAB
+          </h1>
+        </div>
+
+        <div className="mx-auto w-full max-w-7xl border-t-2 border-black pt-6">
+          <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-3">
+            <div className="font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase">
+              <p>BASED IN KAMPUS MALAYSIA</p>
+              <p className="mt-1 text-black/80">
+                SISTEM PENJEJAK BAJET &amp; PERBELANJAAN KELAB
+              </p>
             </div>
 
-            <div className="flex items-center gap-2.5 shrink-0">
+            <div className="flex justify-center">
               <button
                 type="button"
-                onClick={fetchTransactions}
-                disabled={isLoading}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 whitespace-nowrap shrink-0 disabled:opacity-50"
+                onClick={scrollToRingkasan}
+                aria-label="Tatal ke bawah ke ringkasan kewangan"
+                className="group relative flex h-[152px] w-[152px] items-center justify-center rounded-full border-2 border-black/15 transition-transform duration-200 hover:scale-110 hover:border-black"
               >
-                <RefreshCw className={`h-3.5 w-3.5 ${isLoading ? 'animate-spin' : ''}`} />
-                <span>Muat Semula</span>
+                <div className="animate-spin-12s flex h-[144px] w-[144px] items-center justify-center">
+                  <svg
+                    viewBox="0 0 144 144"
+                    className="h-[144px] w-[144px]"
+                    aria-hidden="true"
+                  >
+                    <defs>
+                      <path
+                        id="scroll-down-circle-path"
+                        d="M 72, 72 m -54, 0 a 54,54 0 1,1 108,0 a 54,54 0 1,1 -108,0"
+                      />
+                    </defs>
+                    <text
+                      fill="#000000"
+                      fontSize="9.5"
+                      fontWeight="700"
+                      letterSpacing="1.6"
+                      className="font-mono uppercase"
+                    >
+                      <textPath
+                        href="#scroll-down-circle-path"
+                        startOffset="0%"
+                        textLength="332"
+                      >
+                        SCROLL DOWN • SCROLL DOWN • SCROLL DOWN •{' '}
+                      </textPath>
+                    </text>
+                  </svg>
+                </div>
+                <ArrowDown
+                  aria-hidden="true"
+                  className="animate-bob-down absolute h-6 w-6 text-black transition-transform group-hover:scale-110"
+                />
               </button>
+            </div>
+
+            <div className="font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase md:text-right">
+              <p>BENDAHARI KELAB PELAJAR</p>
+              <p className="mt-1">JAWATANKUASA PROGRAM</p>
+              <p className="mt-1 text-black/80">MATA WANG: RINGGIT MALAYSIA (RM)</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Skewed Neon-Style Moving Marquee Section */}
+      <section
+        aria-hidden="true"
+        className="my-6 -skew-y-2 overflow-hidden border-y-2 border-black bg-black py-7 shadow-[0_12px_32px_rgba(0,0,0,0.28)]"
+      >
+        <div className="animate-marquee-left whitespace-nowrap">
+          <span className="shrink-0 pr-8 font-[family-name:var(--font-display)] text-[8.5vw] leading-[0.88] tracking-[-0.04em] text-[#FF4D00] uppercase drop-shadow-[0_0_14px_rgba(255,77,0,0.5)]">
+            PENDAPATAN • PERBELANJAAN • BAKI SEMASA • TAJAAN • YURAN • LOGISTIK •{' '}
+          </span>
+          <span className="shrink-0 pr-8 font-[family-name:var(--font-display)] text-[8.5vw] leading-[0.88] tracking-[-0.04em] text-[#FF4D00] uppercase drop-shadow-[0_0_14px_rgba(255,77,0,0.5)]">
+            PENDAPATAN • PERBELANJAAN • BAKI SEMASA • TAJAAN • YURAN • LOGISTIK •{' '}
+          </span>
+        </div>
+
+        <div className="mt-3 animate-marquee-right whitespace-nowrap">
+          <span className="shrink-0 pr-8 font-[family-name:var(--font-display)] text-[4.5vw] leading-[0.9] tracking-[-0.04em] text-white/90 uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.25)]">
+            CLUB EXPENSE TRACKER • REKOD KEWANGAN KELAB • RINGGIT MALAYSIA (RM) •{' '}
+          </span>
+          <span className="shrink-0 pr-8 font-[family-name:var(--font-display)] text-[4.5vw] leading-[0.9] tracking-[-0.04em] text-white/90 uppercase drop-shadow-[0_0_10px_rgba(255,255,255,0.25)]">
+            CLUB EXPENSE TRACKER • REKOD KEWANGAN KELAB • RINGGIT MALAYSIA (RM) •{' '}
+          </span>
+        </div>
+      </section>
+
+      {/* Main Treasury Dashboard: KPI Cards + Filters + Ledger Table */}
+      <main className="mx-auto max-w-7xl space-y-10 px-4 py-12 sm:px-6 lg:px-8">
+        <section id="ringkasan" className="space-y-6">
+          <div className="flex flex-col gap-4 border-b-2 border-black pb-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase">
+                01 / RINGKASAN KEWANGAN SEMASA
+              </p>
+              <h2 className="mt-1 font-[family-name:var(--font-display)] text-4xl leading-[0.88] tracking-[-0.04em] text-black uppercase sm:text-5xl">
+                STATUS BAJET KELAB
+              </h2>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 shrink-0">
               <button
                 type="button"
                 onClick={handleExportCsv}
                 disabled={isLoading || filteredRecords.length === 0}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-xs font-medium text-slate-700 transition-colors hover:bg-slate-50 whitespace-nowrap shrink-0 disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-4 py-2 font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase transition-transform hover:scale-105 hover:bg-black hover:text-white whitespace-nowrap shrink-0 disabled:opacity-50"
               >
                 <Download className="h-3.5 w-3.5" />
-                <span>Eksport CSV</span>
+                <span>EKSPORT CSV</span>
+              </button>
+              <button
+                type="button"
+                onClick={handleOpenCreate}
+                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-black px-5 py-2 font-mono text-xs font-bold tracking-[-0.02em] text-white uppercase transition-transform hover:scale-110 hover:bg-white hover:text-black whitespace-nowrap shrink-0"
+              >
+                <Plus className="h-4 w-4" />
+                <span>TAMBAH REKOD</span>
               </button>
             </div>
           </div>
@@ -339,23 +458,25 @@ export default function ClubExpenseTrackerPage() {
           {!databaseConfigured && !fetchError && (
             <div
               role="status"
-              className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-sm text-amber-900"
+              className="flex flex-wrap items-center justify-between gap-4 rounded-none border-2 border-black bg-white px-5 py-4 text-black"
             >
               <div>
-                <p className="font-semibold">Sambungan PostgreSQL Belum Dikonfigurasi</p>
-                <p className="mt-0.5 text-xs text-amber-800">
-                  Tetapkan <span className="font-mono">DATABASE_URL</span> dalam fail{' '}
-                  <span className="font-mono">.env</span> atau Secrets, kemudian jalankan{' '}
-                  <span className="font-mono">npx prisma db push</span> untuk menyimpan transaksi.
+                <p className="font-mono text-xs font-bold tracking-[-0.02em] uppercase">
+                  SAMBUNGAN POSTGRESQL BELUM DIKONFIGURASI
+                </p>
+                <p className="mt-1 font-sans text-xs text-black/80">
+                  Tetapkan <span className="font-mono font-bold">DATABASE_URL</span> dalam fail{' '}
+                  <span className="font-mono font-bold">.env</span> atau Secrets, kemudian jalankan{' '}
+                  <span className="font-mono font-bold">npx prisma db push</span>.
                 </p>
               </div>
               <button
                 type="button"
                 onClick={fetchTransactions}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-amber-300 bg-white px-3 py-1.5 text-xs font-medium text-amber-900 transition-colors hover:bg-amber-100/60 whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-1.5 rounded-full border-2 border-black bg-black px-4 py-1.5 font-mono text-xs font-bold text-white uppercase transition-transform hover:scale-105 whitespace-nowrap shrink-0"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
-                Semak Semula
+                SEMAK SEMULA
               </button>
             </div>
           )}
@@ -363,88 +484,103 @@ export default function ClubExpenseTrackerPage() {
           {fetchError && (
             <div
               role="alert"
-              className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-red-200 bg-red-50 px-5 py-4 text-sm text-red-800"
+              className="flex flex-wrap items-center justify-between gap-4 rounded-none border-2 border-black bg-black px-5 py-4 text-white"
             >
               <div>
-                <p className="font-semibold">Sambungan Pangkalan Data Diperlukan</p>
-                <p className="mt-0.5 text-xs text-red-700">{fetchError}</p>
+                <p className="font-mono text-xs font-bold tracking-[-0.02em] text-[#FF4D00] uppercase">
+                  RALAT SAMBUNGAN PANGKALAN DATA
+                </p>
+                <p className="mt-1 font-sans text-xs text-white/90">{fetchError}</p>
               </div>
               <button
                 type="button"
                 onClick={fetchTransactions}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-red-300 bg-white px-3 py-1.5 text-xs font-medium text-red-700 transition-colors hover:bg-red-50 whitespace-nowrap shrink-0"
+                className="inline-flex items-center gap-1.5 rounded-full border-2 border-white bg-white px-4 py-1.5 font-mono text-xs font-bold text-black uppercase transition-transform hover:scale-105 whitespace-nowrap shrink-0"
               >
                 <RefreshCw className="h-3.5 w-3.5" />
-                Cuba Lagi
+                CUBA LAGI
               </button>
             </div>
           )}
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-            <div className="rounded-xl border border-slate-200 bg-white p-5">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-slate-600">
-                  Jumlah Pendapatan
+          {/* 3 Main Statistic Cards */}
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
+            <div className="rounded-none border-2 border-black bg-white p-6">
+              <div className="flex items-center justify-between border-b-2 border-black pb-3">
+                <span className="font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase">
+                  JUMLAH PENDAPATAN
                 </span>
-                <ArrowUpRight className="h-4 w-4 text-emerald-600" />
+                <ArrowUpRight className="h-5 w-5 text-emerald-700" />
               </div>
-              <p className="mt-3 font-mono text-2xl font-bold tracking-tight tabular-nums text-emerald-700 sm:text-3xl">
+              <p className="mt-4 font-mono text-3xl font-bold tracking-[-0.02em] tabular-nums text-emerald-700">
                 {isLoading ? 'RM —' : formatAbsoluteRM(totalPendapatan)}
               </p>
-              <p className="mt-2 text-xs text-slate-500">
-                + Aliran masuk daripada tajaan dan kutipan yuran
+              <p className="mt-3 font-mono text-[11px] font-bold tracking-[-0.02em] text-black/70 uppercase">
+                + ALIRAN MASUK (TAJAAN &amp; YURAN)
               </p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-5">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-slate-600">
-                  Jumlah Perbelanjaan
+            <div className="rounded-none border-2 border-black bg-white p-6">
+              <div className="flex items-center justify-between border-b-2 border-black pb-3">
+                <span className="font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase">
+                  JUMLAH PERBELANJAAN
                 </span>
-                <ArrowDownRight className="h-4 w-4 text-red-600" />
+                <ArrowDownRight className="h-5 w-5 text-red-700" />
               </div>
-              <p className="mt-3 font-mono text-2xl font-bold tracking-tight tabular-nums text-red-700 sm:text-3xl">
+              <p className="mt-4 font-mono text-3xl font-bold tracking-[-0.02em] tabular-nums text-red-700">
                 {isLoading ? 'RM —' : formatAbsoluteRM(totalPerbelanjaan)}
               </p>
-              <p className="mt-2 text-xs text-slate-500">
-                − Aliran keluar untuk program, logistik, dan pembelian
+              <p className="mt-3 font-mono text-[11px] font-bold tracking-[-0.02em] text-black/70 uppercase">
+                − ALIRAN KELUAR PROGRAM KELAB
               </p>
             </div>
 
-            <div className="rounded-xl border border-slate-200 bg-white p-5">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium text-slate-600">
-                  Baki Semasa
+            <div className="rounded-none border-2 border-black bg-white p-6">
+              <div className="flex items-center justify-between border-b-2 border-black pb-3">
+                <span className="font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase">
+                  BAKI SEMASA
                 </span>
                 <Wallet
-                  className={`h-4 w-4 ${
-                    bakiSemasa < 0 ? 'text-red-600' : 'text-slate-700'
+                  className={`h-5 w-5 ${
+                    bakiSemasa < 0 ? 'text-red-600' : 'text-black'
                   }`}
                 />
               </div>
               <p
-                className={`mt-3 font-mono text-2xl font-bold tracking-tight tabular-nums sm:text-3xl ${
-                  bakiSemasa < 0 ? 'text-red-600' : 'text-slate-900'
+                className={`mt-4 font-mono text-3xl font-bold tracking-[-0.02em] tabular-nums ${
+                  bakiSemasa < 0 ? 'text-red-600' : 'text-black'
                 }`}
               >
                 {isLoading ? 'RM —' : formatRM(bakiSemasa)}
               </p>
               <p
-                className={`mt-2 text-xs font-medium ${
-                  bakiSemasa < 0 ? 'text-red-600' : 'text-slate-500'
+                className={`mt-3 font-mono text-[11px] font-bold tracking-[-0.02em] uppercase ${
+                  bakiSemasa < 0 ? 'text-red-600' : 'text-black/70'
                 }`}
               >
                 {bakiSemasa < 0
-                  ? 'Defisit · Perbelanjaan melebihi pendapatan semasa'
-                  : 'Pendapatan ditolak perbelanjaan semasa'}
+                  ? 'DEFISIT BAJET · PERBELANJAAN MELEBIHI PENDAPATAN'
+                  : 'PENDAPATAN − PERBELANJAAN SEMASA'}
               </p>
             </div>
           </div>
         </section>
 
-        <section id="lejar-transaksi" className="space-y-4">
-          <div className="flex flex-col gap-3 rounded-xl border border-slate-200 bg-white p-4 lg:flex-row lg:items-center lg:justify-between">
-            <div className="flex flex-wrap items-center gap-1 rounded-lg bg-slate-100 p-1">
+        {/* Transaction Ledger & Filters */}
+        <section id="lejar-transaksi" className="space-y-5 pt-4">
+          <div className="flex flex-col gap-4 border-b-2 border-black pb-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase">
+                02 / REKOD ALIRAN TUNAI
+              </p>
+              <h2 className="mt-1 font-[family-name:var(--font-display)] text-4xl leading-[0.88] tracking-[-0.04em] text-black uppercase sm:text-5xl">
+                LEJAR TRANSAKSI
+              </h2>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-3 rounded-none border-2 border-black bg-white p-4 lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-wrap items-center gap-2">
               {(['Semua', ...JENIS_TRANSAKSI_OPTIONS] as const).map((jenis) => {
                 const active = filterJenis === jenis;
                 return (
@@ -452,13 +588,13 @@ export default function ClubExpenseTrackerPage() {
                     key={jenis}
                     type="button"
                     onClick={() => setFilterJenis(jenis)}
-                    className={`rounded-md px-3 py-1.5 text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${
+                    className={`rounded-full border-2 border-black px-4 py-1.5 font-mono text-xs font-bold tracking-[-0.02em] uppercase transition-all whitespace-nowrap shrink-0 ${
                       active
-                        ? 'bg-white text-slate-900 shadow-sm'
-                        : 'text-slate-600 hover:text-slate-900'
+                        ? 'bg-black text-white'
+                        : 'bg-white text-black hover:bg-black hover:text-white'
                     }`}
                   >
-                    {jenis === 'Semua' ? 'Semua Jenis' : jenis}
+                    {jenis === 'Semua' ? 'SEMUA JENIS' : jenis}
                   </button>
                 );
               })}
@@ -466,14 +602,14 @@ export default function ClubExpenseTrackerPage() {
 
             <div className="flex flex-1 flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
               <div className="relative w-full sm:max-w-xs">
-                <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-slate-400" />
+                <Search className="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-black" />
                 <input
                   type="search"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Cari perkara transaksi..."
+                  placeholder="CARI PERKARA TRANSAKSI..."
                   aria-label="Cari perkara transaksi"
-                  className="w-full rounded-lg border border-slate-200 bg-white py-2 pr-3 pl-9 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10"
+                  className="w-full rounded-none border-2 border-black bg-white py-2 pr-3 pl-9 font-mono text-xs font-bold tracking-[-0.02em] text-black placeholder:text-black/45 focus:bg-[#FF4D00]/10 focus:outline-none"
                 />
               </div>
 
@@ -482,9 +618,9 @@ export default function ClubExpenseTrackerPage() {
                   value={filterKategori}
                   onChange={(e) => setFilterKategori(e.target.value)}
                   aria-label="Tapis mengikut kategori"
-                  className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10"
+                  className="rounded-none border-2 border-black bg-white px-3 py-2 font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase focus:outline-none"
                 >
-                  <option value="Semua">Semua Kategori</option>
+                  <option value="Semua">SEMUA KATEGORI</option>
                   {KATEGORI_OPTIONS.map((kat) => (
                     <option key={kat} value={kat}>
                       {kat}
@@ -496,10 +632,10 @@ export default function ClubExpenseTrackerPage() {
                   <button
                     type="button"
                     onClick={handleResetFilters}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 whitespace-nowrap shrink-0"
+                    className="inline-flex items-center gap-1.5 rounded-full border-2 border-black bg-black px-4 py-2 font-mono text-xs font-bold tracking-[-0.02em] text-[#FF4D00] uppercase transition-transform hover:scale-105 whitespace-nowrap shrink-0"
                   >
                     <RotateCcw className="h-3.5 w-3.5" />
-                    <span>Set Semula</span>
+                    <span>RESET</span>
                   </button>
                 )}
               </div>
@@ -517,18 +653,63 @@ export default function ClubExpenseTrackerPage() {
             onOpenCreate={handleOpenCreate}
           />
         </section>
-
-        <CategoryBreakdown
-          records={records}
-          activeKategori={filterKategori}
-          onSelectKategori={setFilterKategori}
-        />
       </main>
 
-      <footer className="mt-12 border-t border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-4 py-5 text-xs text-slate-500 sm:px-6 lg:px-8">
-          <span>Club Expense Tracker · Sistem Penjejak Bajet &amp; Perbelanjaan Kelab</span>
-          <span className="font-mono">Mata Wang: MYR (RM)</span>
+      {/* Dark Vertical Service / Category Breakdown Section */}
+      <CategoryBreakdown
+        records={records}
+        activeKategori={filterKategori}
+        onSelectKategori={setFilterKategori}
+      />
+
+      {/* Giant CTA Section */}
+      <section className="px-4 py-20 text-center sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <p className="font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase">
+            REKOD TRANSAKSI BAHARU KE PANGKALAN DATA
+          </p>
+          <h2 className="mt-4 font-[family-name:var(--font-display)] text-[14vw] leading-[0.86] tracking-[-0.04em] text-black uppercase">
+            CATAT
+            <br />
+            SEKARANG
+          </h2>
+          <div className="mt-10 flex justify-center">
+            <button
+              type="button"
+              onClick={handleOpenCreate}
+              className="inline-flex items-center gap-3 rounded-full border-2 border-black bg-black px-10 py-5 font-mono text-sm font-bold tracking-[-0.02em] text-white uppercase transition-transform duration-200 hover:scale-110 hover:bg-white hover:text-black"
+            >
+              <Plus className="h-5 w-5" />
+              <span>TAMBAH REKOD TRANSAKSI</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* Brutalist Footer */}
+      <footer className="border-t-2 border-black bg-[#FF4D00] px-4 py-6 sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 font-mono text-[12px] font-bold tracking-[-0.02em] text-black uppercase">
+          <span>
+            © 2026 CLUB EXPENSE TRACKER — SISTEM PENJEJAK BAJET &amp; PERBELANJAAN KELAB
+          </span>
+          <div className="flex flex-wrap items-center gap-6">
+            <a href="#ringkasan" className="hover:translate-x-1 transition-transform">
+              RINGKASAN
+            </a>
+            <a href="#lejar-transaksi" className="hover:translate-x-1 transition-transform">
+              LEJAR
+            </a>
+            <a href="#pecahan-kategori" className="hover:translate-x-1 transition-transform">
+              KATEGORI
+            </a>
+            <button
+              type="button"
+              onClick={handleExportCsv}
+              className="uppercase hover:translate-x-1 transition-transform"
+            >
+              CSV
+            </button>
+          </div>
         </div>
       </footer>
 

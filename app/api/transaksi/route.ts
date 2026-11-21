@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
+import { ensureTransaksiTable, isTableMissingError, prisma } from '@/lib/prisma';
 import {
   JENIS_TRANSAKSI_OPTIONS,
   KATEGORI_OPTIONS,
@@ -14,9 +15,17 @@ function hasDatabaseUrl(): boolean {
   return Boolean(url && url.length > 0);
 }
 
-function getDatabaseErrorMessage(): string {
+function getDatabaseErrorMessage(error: unknown): string {
   if (!hasDatabaseUrl()) {
     return 'Pemboleh ubah persekitaran DATABASE_URL belum dikonfigurasi pada pelayan.';
+  }
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error.code === 'P2021') {
+      return 'Jadual Transaksi belum wujud dalam pangkalan data. Sila jalankan npx prisma db push.';
+    }
+    if (error.code === 'P1001' || error.code === 'P1000') {
+      return 'Tidak dapat menyambung ke pelayan PostgreSQL. Sila semak DATABASE_URL anda.';
+    }
   }
   return 'Gagal berhubung dengan pangkalan data PostgreSQL. Sila semak sambungan DATABASE_URL anda.';
 }
@@ -29,46 +38,58 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  try {
-    const searchParams = request.nextUrl.searchParams;
-    const kategori = searchParams.get('kategori');
-    const jenis = searchParams.get('jenis_transaksi');
+  const searchParams = request.nextUrl.searchParams;
+  const kategori = searchParams.get('kategori');
+  const jenis = searchParams.get('jenis_transaksi');
 
-    const where: { kategori?: string; jenis_transaksi?: string } = {};
+  const where: { kategori?: string; jenis_transaksi?: string } = {};
 
-    if (kategori && kategori !== 'Semua') {
-      if (!(KATEGORI_OPTIONS as readonly string[]).includes(kategori)) {
-        return NextResponse.json(
-          { error: 'Penapis kategori tidak sah.' },
-          { status: 400 }
-        );
-      }
-      where.kategori = kategori;
+  if (kategori && kategori !== 'Semua') {
+    if (!(KATEGORI_OPTIONS as readonly string[]).includes(kategori)) {
+      return NextResponse.json(
+        { error: 'Penapis kategori tidak sah.' },
+        { status: 400 }
+      );
     }
+    where.kategori = kategori;
+  }
 
-    if (jenis && jenis !== 'Semua') {
-      if (!(JENIS_TRANSAKSI_OPTIONS as readonly string[]).includes(jenis)) {
-        return NextResponse.json(
-          { error: 'Penapis jenis transaksi tidak sah.' },
-          { status: 400 }
-        );
-      }
-      where.jenis_transaksi = jenis;
+  if (jenis && jenis !== 'Semua') {
+    if (!(JENIS_TRANSAKSI_OPTIONS as readonly string[]).includes(jenis)) {
+      return NextResponse.json(
+        { error: 'Penapis jenis transaksi tidak sah.' },
+        { status: 400 }
+      );
     }
+    where.jenis_transaksi = jenis;
+  }
 
-    const transaksi = await prisma.transaksi.findMany({
+  const runQuery = () =>
+    prisma.transaksi.findMany({
       where,
       orderBy: [{ tarikh: 'desc' }, { createdAt: 'desc' }, { id: 'desc' }],
     });
+
+  try {
+    let transaksi;
+    try {
+      transaksi = await runQuery();
+    } catch (firstError) {
+      if (isTableMissingError(firstError)) {
+        await ensureTransaksiTable();
+        transaksi = await runQuery();
+      } else {
+        throw firstError;
+      }
+    }
 
     return NextResponse.json(
       { data: transaksi, databaseConfigured: true },
       { status: 200 }
     );
   } catch (error) {
-    console.warn('GET /api/transaksi warning:', error instanceof Error ? error.message : error);
     return NextResponse.json(
-      { error: getDatabaseErrorMessage() },
+      { error: getDatabaseErrorMessage(error) },
       { status: 500 }
     );
   }
@@ -102,8 +123,8 @@ export async function POST(request: NextRequest) {
 
   const payload = validation.data as TransaksiPayload;
 
-  try {
-    const created = await prisma.transaksi.create({
+  const runCreate = () =>
+    prisma.transaksi.create({
       data: {
         perkara: payload.perkara,
         jenis_transaksi: payload.jenis_transaksi,
@@ -113,11 +134,23 @@ export async function POST(request: NextRequest) {
       },
     });
 
+  try {
+    let created;
+    try {
+      created = await runCreate();
+    } catch (firstError) {
+      if (isTableMissingError(firstError)) {
+        await ensureTransaksiTable();
+        created = await runCreate();
+      } else {
+        throw firstError;
+      }
+    }
+
     return NextResponse.json({ data: created }, { status: 201 });
   } catch (error) {
-    console.warn('POST /api/transaksi warning:', error instanceof Error ? error.message : error);
     return NextResponse.json(
-      { error: getDatabaseErrorMessage() },
+      { error: getDatabaseErrorMessage(error) },
       { status: 500 }
     );
   }

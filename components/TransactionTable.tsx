@@ -41,18 +41,18 @@ export default function TransactionTable({
 
   if (isLoading) {
     return (
-      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
-        <div className="divide-y divide-slate-100">
+      <div className="overflow-hidden rounded-none border-2 border-black bg-white">
+        <div className="divide-y-2 divide-black/15">
           {Array.from({ length: 6 }).map((_, index) => (
             <div
               key={index}
-              className="flex h-12 items-center justify-between gap-4 px-5 animate-pulse"
+              className="flex h-14 items-center justify-between gap-4 px-5 animate-pulse"
             >
-              <div className="h-3.5 w-24 rounded bg-slate-100" />
-              <div className="h-3.5 flex-1 max-w-md rounded bg-slate-100" />
-              <div className="h-3.5 w-20 rounded bg-slate-100" />
-              <div className="h-3.5 w-24 rounded bg-slate-100" />
-              <div className="h-3.5 w-16 rounded bg-slate-100" />
+              <div className="h-3.5 w-24 rounded-none bg-black/10" />
+              <div className="h-3.5 flex-1 max-w-md rounded-none bg-black/10" />
+              <div className="h-3.5 w-20 rounded-none bg-black/10" />
+              <div className="h-3.5 w-24 rounded-none bg-black/10" />
+              <div className="h-3.5 w-16 rounded-none bg-black/10" />
             </div>
           ))}
         </div>
@@ -62,35 +62,35 @@ export default function TransactionTable({
 
   if (records.length === 0) {
     return (
-      <div className="rounded-xl border border-slate-200 bg-white px-6 py-14 text-center">
-        <h3 className="text-base font-semibold text-slate-900">
+      <div className="rounded-none border-2 border-black bg-white px-6 py-14 text-center text-black">
+        <h3 className="font-[family-name:var(--font-display)] text-2xl leading-[0.9] tracking-[-0.04em] uppercase sm:text-3xl">
           {totalUnfilteredCount === 0
-            ? 'Belum ada rekod transaksi kelab'
-            : 'Tiada transaksi sepadan dengan penapis'}
+            ? 'BELUM ADA REKOD TRANSAKSI'
+            : 'TIADA TRANSAKSI SEPADAN'}
         </h3>
-        <p className="mx-auto mt-1.5 max-w-md text-sm text-slate-500">
+        <p className="mx-auto mt-3 max-w-md font-sans text-sm text-black/75">
           {totalUnfilteredCount === 0
             ? 'Mulakan lejar kewangan kelab anda dengan merekod tajaan, kutipan yuran, atau perbelanjaan program.'
             : 'Cuba ubah kategori, jenis transaksi, atau kata kunci carian untuk melihat rekod lain.'}
         </p>
-        <div className="mt-5 flex justify-center">
+        <div className="mt-6 flex justify-center">
           {totalUnfilteredCount === 0 ? (
             <button
               type="button"
               onClick={onOpenCreate}
-              className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 whitespace-nowrap shrink-0"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-black px-6 py-2.5 font-mono text-xs font-bold tracking-[-0.02em] text-white uppercase transition-transform hover:scale-110 hover:bg-[#FF4D00] hover:text-black whitespace-nowrap shrink-0"
             >
               <Plus className="h-4 w-4" />
-              Tambah Rekod Pertama
+              TAMBAH REKOD PERTAMA
             </button>
           ) : (
             <button
               type="button"
               onClick={onResetFilters}
-              className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 whitespace-nowrap shrink-0"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-white px-6 py-2.5 font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase transition-transform hover:scale-110 hover:bg-black hover:text-white whitespace-nowrap shrink-0"
             >
               <RotateCcw className="h-4 w-4" />
-              Set Semula Penapis
+              SET SEMULA PENAPIS
             </button>
           )}
         </div>
@@ -99,71 +99,71 @@ export default function TransactionTable({
   }
 
   return (
-    <div className="overflow-hidden rounded-xl border border-slate-200 bg-white">
+    <div className="overflow-hidden rounded-none border-2 border-black bg-white text-black">
       <div className="overflow-x-auto">
         <table className="w-full border-collapse text-left">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50/80 text-xs font-medium text-slate-500">
-              <th className="py-3 pl-5 pr-3 whitespace-nowrap">Tarikh</th>
-              <th className="px-3 py-3">Perkara</th>
-              <th className="px-3 py-3 whitespace-nowrap">Kategori</th>
-              <th className="px-3 py-3 whitespace-nowrap">Jenis</th>
-              <th className="px-3 py-3 text-right whitespace-nowrap">Jumlah (RM)</th>
-              <th className="py-3 pl-3 pr-5 text-right whitespace-nowrap">Tindakan</th>
+            <tr className="border-b-2 border-black bg-black font-mono text-xs font-bold tracking-[-0.02em] text-white uppercase">
+              <th className="py-3.5 pl-5 pr-3 whitespace-nowrap">TARIKH</th>
+              <th className="px-3 py-3.5">PERKARA</th>
+              <th className="px-3 py-3.5 whitespace-nowrap">KATEGORI</th>
+              <th className="px-3 py-3.5 whitespace-nowrap">JENIS</th>
+              <th className="px-3 py-3.5 text-right whitespace-nowrap">JUMLAH (RM)</th>
+              <th className="py-3.5 pl-3 pr-5 text-right whitespace-nowrap">TINDAKAN</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 text-sm">
+          <tbody className="divide-y divide-black/20 text-sm">
             {records.map((record) => {
               const isIncome = record.jenis_transaksi === 'Pendapatan';
               return (
                 <tr
                   key={record.id}
-                  className="transition-colors hover:bg-slate-50/90"
+                  className="transition-colors hover:bg-[#FF4D00]/10"
                 >
-                  <td className="py-3 pl-5 pr-3 font-mono text-xs tabular-nums text-slate-500 whitespace-nowrap">
+                  <td className="py-3.5 pl-5 pr-3 font-mono text-xs font-bold tabular-nums tracking-[-0.02em] text-black/80 whitespace-nowrap uppercase">
                     {formatTarikhPaparan(record.tarikh)}
                   </td>
-                  <td className="px-3 py-3 font-medium text-slate-900 min-w-[220px]">
+                  <td className="px-3 py-3.5 font-sans text-sm font-semibold text-black min-w-[220px]">
                     {record.perkara}
                   </td>
-                  <td className="px-3 py-3 text-slate-600 whitespace-nowrap">
+                  <td className="px-3 py-3.5 font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase whitespace-nowrap">
                     {record.kategori}
                   </td>
-                  <td className="px-3 py-3 whitespace-nowrap">
+                  <td className="px-3 py-3.5 whitespace-nowrap">
                     <span
-                      className={`text-xs font-medium ${
+                      className={`font-mono text-xs font-bold tracking-[-0.02em] uppercase ${
                         isIncome ? 'text-emerald-700' : 'text-red-700'
                       }`}
                     >
-                      {isIncome ? '+ Pendapatan' : '− Perbelanjaan'}
+                      {isIncome ? '+ PENDAPATAN' : '− PERBELANJAAN'}
                     </span>
                   </td>
                   <td
-                    className={`px-3 py-3 text-right font-mono text-sm font-semibold tabular-nums whitespace-nowrap ${
+                    className={`px-3 py-3.5 text-right font-mono text-sm font-bold tabular-nums tracking-[-0.02em] whitespace-nowrap ${
                       isIncome ? 'text-emerald-700' : 'text-red-700'
                     }`}
                   >
                     {isIncome ? '+' : '−'} {formatAbsoluteRM(record.jumlah_rm)}
                   </td>
-                  <td className="py-2.5 pl-3 pr-5 text-right whitespace-nowrap">
-                    <div className="inline-flex items-center justify-end gap-1">
+                  <td className="py-3 pl-3 pr-5 text-right whitespace-nowrap">
+                    <div className="inline-flex items-center justify-end gap-2">
                       <button
                         type="button"
                         onClick={() => onEdit(record)}
                         aria-label={`Edit ${record.perkara}`}
-                        className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-slate-900"
+                        className="inline-flex h-8 items-center gap-1.5 rounded-full border-2 border-black bg-white px-3 font-mono text-[11px] font-bold tracking-[-0.02em] text-black uppercase transition-all hover:scale-105 hover:bg-black hover:text-white"
                       >
-                        <Pencil className="h-3.5 w-3.5" />
-                        <span>Edit</span>
+                        <Pencil className="h-3 w-3" />
+                        <span>EDIT</span>
                       </button>
                       <button
                         type="button"
                         onClick={() => onRequestDelete(record)}
                         aria-label={`Padam ${record.perkara}`}
-                        className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-700 focus-visible:outline-2 focus-visible:outline-red-600"
+                        className="inline-flex h-8 items-center gap-1.5 rounded-full border-2 border-black bg-black px-3 font-mono text-[11px] font-bold tracking-[-0.02em] text-[#FF4D00] uppercase transition-all hover:scale-105 hover:bg-red-700 hover:text-white"
                       >
-                        <Trash2 className="h-3.5 w-3.5" />
-                        <span>Padam</span>
+                        <Trash2 className="h-3 w-3" />
+                        <span>PADAM</span>
                       </button>
                     </div>
                   </td>
@@ -174,22 +174,21 @@ export default function TransactionTable({
         </table>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-slate-200 bg-slate-50/70 px-5 py-3 text-xs text-slate-600">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t-2 border-black bg-white px-5 py-3.5 font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase">
         <div>
-          Menunjukkan <span className="font-mono font-semibold text-slate-900">{records.length}</span>{' '}
-          daripada <span className="font-mono font-semibold text-slate-900">{totalUnfilteredCount}</span>{' '}
-          rekod
+          MENUNJUKKAN <span className="tabular-nums underline">{records.length}</span> DARIPADA{' '}
+          <span className="tabular-nums underline">{totalUnfilteredCount}</span> REKOD
         </div>
         {hasActiveFilters && (
-          <div className="flex flex-wrap items-center gap-4 font-mono tabular-nums">
+          <div className="flex flex-wrap items-center gap-4 tabular-nums">
             <span className="text-emerald-700">
-              Masuk: +{formatAbsoluteRM(filteredIncome)}
+              MASUK: +{formatAbsoluteRM(filteredIncome)}
             </span>
             <span className="text-red-700">
-              Keluar: −{formatAbsoluteRM(filteredExpense)}
+              KELUAR: −{formatAbsoluteRM(filteredExpense)}
             </span>
-            <span className={filteredNet < 0 ? 'font-semibold text-red-600' : 'font-semibold text-slate-900'}>
-              Bersih Paparan: {formatRM(filteredNet)}
+            <span className={filteredNet < 0 ? 'text-red-700' : 'text-black'}>
+              BERSIH PAPARAN: {formatRM(filteredNet)}
             </span>
           </div>
         )}

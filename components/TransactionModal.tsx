@@ -83,18 +83,18 @@ function TransactionModalBody({
 
     const trimmedPerkara = perkara.trim();
     if (!trimmedPerkara) {
-      setFormError('Sila masukkan keterangan perkara transaksi.');
+      setFormError('SILA MASUKKAN KETERANGAN PERKARA TRANSAKSI.');
       return;
     }
 
     const numericAmount = Number(jumlahRm);
     if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
-      setFormError('Sila masukkan jumlah RM yang sah (lebih daripada 0.00).');
+      setFormError('SILA MASUKKAN JUMLAH RM YANG SAH (LEBIH DARIPADA 0.00).');
       return;
     }
 
     if (!tarikh) {
-      setFormError('Sila pilih tarikh transaksi.');
+      setFormError('SILA PILIH TARIKH TRANSAKSI.');
       return;
     }
 
@@ -130,30 +130,30 @@ function TransactionModalBody({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.15 }}
+        transition={{ duration: 0.14 }}
         onClick={() => !isSubmitting && onClose()}
-        className="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px]"
+        className="fixed inset-0 bg-black/75"
       />
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.98, y: 8 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        exit={{ opacity: 0, scale: 0.98, y: 8 }}
-        transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-        className="relative z-10 w-full max-w-lg rounded-xl border border-slate-200 bg-white shadow-lg"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 10 }}
+        transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+        className="relative z-10 w-full max-w-lg rounded-none border-2 border-black bg-white text-black"
       >
-        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+        <div className="flex items-center justify-between border-b-2 border-black bg-[#FF4D00] px-6 py-4">
           <div>
             <h2
               id="transaction-modal-title"
-              className="text-lg font-semibold text-slate-900"
+              className="font-[family-name:var(--font-display)] text-2xl leading-[0.88] tracking-[-0.04em] uppercase"
             >
-              {editingRecord ? 'Kemas Kini Transaksi' : 'Tambah Rekod Transaksi'}
+              {editingRecord ? 'KEMAS KINI REKOD' : 'TAMBAH REKOD'}
             </h2>
-            <p className="mt-0.5 text-xs text-slate-500">
+            <p className="mt-1 font-mono text-[11px] font-bold tracking-[-0.02em] text-black uppercase">
               {editingRecord
-                ? `ID Rekod #${editingRecord.id} · Sila semak butiran sebelum menyimpan`
-                : 'Rekod aliran tunai masuk atau keluar kelab pelajar'}
+                ? `ID REKOD #${editingRecord.id} · KEMAS KINI DATA LEJAR`
+                : 'ALIRAN TUNAI KELAB · RINGGIT MALAYSIA (RM)'}
             </p>
           </div>
           <button
@@ -161,7 +161,7 @@ function TransactionModalBody({
             onClick={onClose}
             disabled={isSubmitting}
             aria-label="Tutup modal"
-            className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-900 disabled:opacity-50"
+            className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-black bg-white text-black transition-transform hover:scale-110 hover:bg-black hover:text-white disabled:opacity-50"
           >
             <X className="h-4 w-4" />
           </button>
@@ -171,17 +171,17 @@ function TransactionModalBody({
           {formError && (
             <div
               role="alert"
-              className="rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700"
+              className="rounded-none border-2 border-black bg-black px-3.5 py-2.5 font-mono text-xs font-bold tracking-[-0.02em] text-[#FF4D00]"
             >
               {formError}
             </div>
           )}
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-slate-700">
+            <label className="mb-2 block font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase">
               Jenis Transaksi
             </label>
-            <div className="grid grid-cols-2 gap-2 rounded-lg bg-slate-100 p-1">
+            <div className="grid grid-cols-2 gap-3">
               {JENIS_TRANSAKSI_OPTIONS.map((option) => {
                 const active = jenisTransaksi === option;
                 return (
@@ -189,15 +189,15 @@ function TransactionModalBody({
                     key={option}
                     type="button"
                     onClick={() => handleJenisChange(option)}
-                    className={`rounded-md px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap shrink-0 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-slate-900 ${
+                    className={`rounded-full border-2 border-black px-4 py-2.5 font-mono text-xs font-bold tracking-[-0.02em] uppercase transition-all whitespace-nowrap shrink-0 ${
                       active
                         ? option === 'Pendapatan'
-                          ? 'bg-white text-emerald-700 shadow-sm'
-                          : 'bg-white text-red-700 shadow-sm'
-                        : 'text-slate-600 hover:text-slate-900'
+                          ? 'bg-black text-emerald-400'
+                          : 'bg-black text-[#FF4D00]'
+                        : 'bg-white text-black hover:bg-black hover:text-white'
                     }`}
                   >
-                    {option === 'Pendapatan' ? '+ Pendapatan' : '− Perbelanjaan'}
+                    {option === 'Pendapatan' ? '+ PENDAPATAN' : '− PERBELANJAAN'}
                   </button>
                 );
               })}
@@ -207,7 +207,7 @@ function TransactionModalBody({
           <div>
             <label
               htmlFor="perkara-input"
-              className="mb-1.5 block text-sm font-medium text-slate-700"
+              className="mb-1.5 block font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase"
             >
               Perkara / Keterangan Item
             </label>
@@ -219,7 +219,7 @@ function TransactionModalBody({
               value={perkara}
               onChange={(e) => setPerkara(e.target.value)}
               placeholder="cth. Tempahan makanan mesyuarat agung"
-              className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10"
+              className="w-full rounded-none border-2 border-black bg-white px-3.5 py-2.5 font-sans text-sm text-black placeholder:text-black/45 focus:bg-[#FF4D00]/10 focus:outline-none"
             />
           </div>
 
@@ -227,7 +227,7 @@ function TransactionModalBody({
             <div>
               <label
                 htmlFor="kategori-select"
-                className="mb-1.5 block text-sm font-medium text-slate-700"
+                className="mb-1.5 block font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase"
               >
                 Kategori
               </label>
@@ -235,7 +235,7 @@ function TransactionModalBody({
                 id="kategori-select"
                 value={kategori}
                 onChange={(e) => setKategori(e.target.value as KategoriTransaksi)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10"
+                className="w-full rounded-none border-2 border-black bg-white px-3.5 py-2.5 font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase focus:outline-none"
               >
                 {KATEGORI_OPTIONS.map((item) => (
                   <option key={item} value={item}>
@@ -248,7 +248,7 @@ function TransactionModalBody({
             <div>
               <label
                 htmlFor="tarikh-input"
-                className="mb-1.5 block text-sm font-medium text-slate-700"
+                className="mb-1.5 block font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase"
               >
                 Tarikh Transaksi
               </label>
@@ -258,7 +258,7 @@ function TransactionModalBody({
                 required
                 value={tarikh}
                 onChange={(e) => setTarikh(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 bg-white px-3.5 py-2.5 font-mono text-sm text-slate-900 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10"
+                className="w-full rounded-none border-2 border-black bg-white px-3.5 py-2.5 font-mono text-xs font-bold text-black focus:outline-none"
               />
             </div>
           </div>
@@ -266,12 +266,12 @@ function TransactionModalBody({
           <div>
             <label
               htmlFor="jumlah-input"
-              className="mb-1.5 block text-sm font-medium text-slate-700"
+              className="mb-1.5 block font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase"
             >
               Jumlah (RM)
             </label>
             <div className="relative">
-              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 font-mono text-sm font-medium text-slate-500">
+              <span className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 font-mono text-xs font-bold text-black">
                 RM
               </span>
               <input
@@ -284,31 +284,31 @@ function TransactionModalBody({
                 value={jumlahRm}
                 onChange={(e) => setJumlahRm(e.target.value)}
                 placeholder="0.00"
-                className="w-full rounded-lg border border-slate-300 bg-white py-2.5 pr-3.5 pl-11 font-mono text-sm tabular-nums text-slate-900 placeholder:text-slate-400 focus:border-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900/10"
+                className="w-full rounded-none border-2 border-black bg-white py-2.5 pr-3.5 pl-11 font-mono text-sm font-bold tabular-nums text-black placeholder:text-black/45 focus:bg-[#FF4D00]/10 focus:outline-none"
               />
             </div>
           </div>
 
-          <div className="flex items-center justify-end gap-3 border-t border-slate-200 pt-4">
+          <div className="flex items-center justify-end gap-3 border-t-2 border-black pt-4">
             <button
               type="button"
               onClick={onClose}
               disabled={isSubmitting}
-              className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 whitespace-nowrap shrink-0 disabled:opacity-50"
+              className="rounded-full border-2 border-black bg-white px-5 py-2 font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase transition-all hover:bg-black hover:text-white whitespace-nowrap shrink-0 disabled:opacity-50"
             >
-              Batal
+              BATAL
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="inline-flex items-center gap-2 rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 whitespace-nowrap shrink-0 disabled:opacity-60"
+              className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-black px-5 py-2 font-mono text-xs font-bold tracking-[-0.02em] text-white uppercase transition-transform hover:scale-105 hover:bg-[#FF4D00] hover:text-black whitespace-nowrap shrink-0 disabled:opacity-60"
             >
-              {isSubmitting && <Loader2 className="h-4 w-4 animate-spin" />}
+              {isSubmitting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
               {isSubmitting
-                ? 'Menyimpan...'
+                ? 'MENYIMPAN...'
                 : editingRecord
-                  ? 'Simpan Perubahan'
-                  : 'Simpan Rekod'}
+                  ? 'SIMPAN PERUBAHAN'
+                  : 'SIMPAN REKOD'}
             </button>
           </div>
         </form>

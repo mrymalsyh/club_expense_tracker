@@ -46,32 +46,32 @@ export default function DeleteConfirmModal({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.15 }}
+            transition={{ duration: 0.14 }}
             onClick={() => !isDeleting && onCancel()}
-            className="fixed inset-0 bg-slate-900/40 backdrop-blur-[1px]"
+            className="fixed inset-0 bg-black/75"
           />
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.98, y: 8 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.98, y: 8 }}
-            transition={{ duration: 0.18, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10 w-full max-w-md rounded-xl border border-slate-200 bg-white shadow-lg"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.16, ease: [0.16, 1, 0.3, 1] }}
+            className="relative z-10 w-full max-w-md rounded-none border-2 border-black bg-white text-black"
           >
-            <div className="flex items-start justify-between px-6 pt-5 pb-3">
+            <div className="flex items-start justify-between border-b-2 border-black bg-[#FF4D00] px-6 py-4">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-600">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none border-2 border-black bg-black text-[#FF4D00]">
                   <AlertTriangle className="h-5 w-5" />
                 </div>
                 <div>
                   <h2
                     id="delete-modal-title"
-                    className="text-base font-semibold text-slate-900"
+                    className="font-[family-name:var(--font-display)] text-xl leading-[0.9] tracking-[-0.04em] uppercase"
                   >
-                    Sahkan Pemadaman Rekod
+                    SAHKAN PADAM
                   </h2>
-                  <p className="mt-0.5 text-xs text-slate-500">
-                    Tindakan ini tidak boleh dipulihkan semula.
+                  <p className="mt-1 font-mono text-[11px] font-bold tracking-[-0.02em] text-black uppercase">
+                    TINDAKAN KEKAL · TIDAK BOLEH DIPULIHKAN
                   </p>
                 </div>
               </div>
@@ -80,22 +80,24 @@ export default function DeleteConfirmModal({
                 onClick={onCancel}
                 disabled={isDeleting}
                 aria-label="Tutup pengesahan"
-                className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700 disabled:opacity-50"
+                className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-black bg-white text-black transition-transform hover:scale-110 hover:bg-black hover:text-white disabled:opacity-50"
               >
                 <X className="h-4 w-4" />
               </button>
             </div>
 
-            <div className="px-6 py-3">
-              <div className="rounded-lg border border-slate-200 bg-slate-50 p-4 text-sm">
-                <p className="font-medium text-slate-900">{record.perkara}</p>
-                <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-slate-500">
+            <div className="p-6">
+              <div className="rounded-none border-2 border-black bg-white p-4">
+                <p className="font-sans text-sm font-semibold text-black">
+                  {record.perkara}
+                </p>
+                <div className="mt-2.5 flex flex-wrap items-center gap-2 font-mono text-xs tracking-[-0.02em] text-black/80 uppercase">
                   <span>{formatTarikhPaparan(record.tarikh)}</span>
-                  <span aria-hidden="true">·</span>
+                  <span aria-hidden="true">/</span>
                   <span>{record.kategori}</span>
-                  <span aria-hidden="true">·</span>
+                  <span aria-hidden="true">/</span>
                   <span
-                    className={`font-mono font-semibold tabular-nums ${
+                    className={`font-bold tabular-nums ${
                       record.jenis_transaksi === 'Pendapatan'
                         ? 'text-emerald-700'
                         : 'text-red-700'
@@ -108,23 +110,23 @@ export default function DeleteConfirmModal({
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 border-t border-slate-200 px-6 py-4">
+            <div className="flex items-center justify-end gap-3 border-t-2 border-black px-6 py-4">
               <button
                 type="button"
                 onClick={onCancel}
                 disabled={isDeleting}
-                className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 whitespace-nowrap shrink-0 disabled:opacity-50"
+                className="rounded-full border-2 border-black bg-white px-5 py-2 font-mono text-xs font-bold tracking-[-0.02em] text-black uppercase transition-all hover:bg-black hover:text-white whitespace-nowrap shrink-0 disabled:opacity-50"
               >
-                Batal
+                BATAL
               </button>
               <button
                 type="button"
                 onClick={() => onConfirm(record.id)}
                 disabled={isDeleting}
-                className="inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 whitespace-nowrap shrink-0 disabled:opacity-60"
+                className="inline-flex items-center gap-2 rounded-full border-2 border-black bg-black px-5 py-2 font-mono text-xs font-bold tracking-[-0.02em] text-[#FF4D00] uppercase transition-transform hover:scale-105 whitespace-nowrap shrink-0 disabled:opacity-60"
               >
-                {isDeleting && <Loader2 className="h-4 w-4 animate-spin" />}
-                {isDeleting ? 'Memadam...' : 'Ya, Padam Rekod'}
+                {isDeleting && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+                {isDeleting ? 'MEMADAM...' : 'YA, PADAM REKOD'}
               </button>
             </div>
           </motion.div>

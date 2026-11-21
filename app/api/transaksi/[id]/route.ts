@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { Prisma } from '@prisma/client';
-import { prisma } from '@/lib/prisma';
+import { ensureTransaksiTable, isTableMissingError, prisma } from '@/lib/prisma';
 import { validateTransaksiInput } from '@/lib/transaksi';
 
 export const dynamic = 'force-dynamic';
@@ -55,11 +55,24 @@ export async function PATCH(
     return NextResponse.json({ error: validation.error }, { status: 400 });
   }
 
-  try {
-    const updated = await prisma.transaksi.update({
+  const runUpdate = () =>
+    prisma.transaksi.update({
       where: { id: numericId },
       data: validation.data,
     });
+
+  try {
+    let updated;
+    try {
+      updated = await runUpdate();
+    } catch (firstError) {
+      if (isTableMissingError(firstError)) {
+        await ensureTransaksiTable();
+        updated = await runUpdate();
+      } else {
+        throw firstError;
+      }
+    }
 
     return NextResponse.json({ data: updated }, { status: 200 });
   } catch (error) {
@@ -72,10 +85,6 @@ export async function PATCH(
         { status: 404 }
       );
     }
-    console.warn(
-      `PATCH /api/transaksi/${numericId} warning:`,
-      error instanceof Error ? error.message : error
-    );
     return NextResponse.json(
       { error: 'Gagal mengemas kini rekod transaksi dalam pangkalan data.' },
       { status: 500 }
@@ -107,10 +116,22 @@ export async function DELETE(
     );
   }
 
-  try {
-    await prisma.transaksi.delete({
+  const runDelete = () =>
+    prisma.transaksi.delete({
       where: { id: numericId },
     });
+
+  try {
+    try {
+      await runDelete();
+    } catch (firstError) {
+      if (isTableMissingError(firstError)) {
+        await ensureTransaksiTable();
+        await runDelete();
+      } else {
+        throw firstError;
+      }
+    }
 
     return NextResponse.json(
       { message: 'Rekod transaksi berjaya dipadam.', id: numericId },
@@ -126,10 +147,6 @@ export async function DELETE(
         { status: 404 }
       );
     }
-    console.warn(
-      `DELETE /api/transaksi/${numericId} warning:`,
-      error instanceof Error ? error.message : error
-    );
     return NextResponse.json(
       { error: 'Gagal memadam rekod transaksi daripada pangkalan data.' },
       { status: 500 }

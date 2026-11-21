@@ -1,16 +1,88 @@
 @import "tailwindcss";
 
 @theme inline {
-  --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-display: var(--font-archivo-black), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-space-mono), ui-monospace, SFMono-Regular, monospace;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    background-color: #f8fafc;
-    color: #0f172a;
+    background-color: #ff4d00;
+    color: #000000;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
+
+  ::selection {
+    background-color: #000000;
+    color: #ff4d00;
+  }
+}
+
+@keyframes marquee-left {
+  0% {
+    transform: translate3d(0%, 0, 0);
+  }
+  100% {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+@keyframes marquee-right {
+  0% {
+    transform: translate3d(-50%, 0, 0);
+  }
+  100% {
+    transform: translate3d(0%, 0, 0);
+  }
+}
+
+@keyframes spin-slow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes bob-down {
+  0%,
+  100% {
+    transform: translateY(-2px);
+  }
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+.animate-marquee-left {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-left 18s linear infinite;
+}
+
+.animate-marquee-right {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-right 22s linear infinite;
+}
+
+.animate-spin-12s {
+  transform-origin: center center;
+  will-change: transform;
+  animation: spin-slow 10s linear infinite;
+}
+
+.animate-bob-down {
+  will-change: transform;
+  animation: bob-down 1.8s ease-in-out infinite;
 }
